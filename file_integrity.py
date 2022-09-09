@@ -33,7 +33,7 @@ from pathlib import Path
 6. etc
 """
 
-ROOT = 'C:/data/files'
+ROOT = 'D:/files'
 def today():
     root_path = ROOT
     p = Path(root_path).glob('**/*')
@@ -125,16 +125,6 @@ def find_moved(new_reduced, deleted_reduced):
     return moved_names_dict, new_excl_moved, deleted_excl_moved
 
 
-# date formatting
-def dateStrFormat(day):
-    formatted = day.strftime("%Y-%m-%d")
-    return formatted
-today_date = dateStrFormat(date.today())
-yesterday_date = dateStrFormat(date.today() - timedelta(days=1))
-filebase = 'D:/dill/hashes_'
-report = 'D:/dill/report_' + today_date + '.txt'
-
-
 def write_report_heading(text_file):
     with open(text_file, 'w') as f:
         a = '{}{}\n{}{}\n{}'.format('Date: ', date.today().strftime("%Y-%m-%d"), 'Root Path: ', ROOT.replace("/", "\\"), 'Hash Function: XXH3(128)')
@@ -177,6 +167,15 @@ def del_files(dir, num_days):
 
 
 #################
+## filenames
+#################
+fmt_date = lambda x: x.strftime("%Y-%m-%d")
+today_date = fmt_date(date.today())
+yesterday_date = fmt_date(date.today() - timedelta(days=1))
+filebase = 'D:/dill/hashes_'
+report = 'D:/dill/report_' + today_date + '.txt'
+
+#################
 ## run functions
 #################
 save_today()
@@ -189,4 +188,4 @@ write_to_file(report, '-- CORRUPT FILES --', corrupt)
 write_to_file(report, '-- NEW FILES --', new_excl_moved)
 write_to_file(report, '-- DELETED FILES --', deleted_excl_moved)
 write_to_file(report, '-- MOVED FILES --', moved_names_dict)
-del_files('C:/logs', 20)
+del_files('D:/dill', 20)
