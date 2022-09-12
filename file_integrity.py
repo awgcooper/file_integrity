@@ -33,9 +33,21 @@ from pathlib import Path
 6. etc
 """
 
-ROOT = 'D:/files'
+
+##################################
+## variables user needs to define
+##################################
+ROOT_DIRECTORY = 'D:/files'
+REPORTS_DIRECTORY = 'D:/dill'
+DAYS_TO_KEEP_REPORTS = 20
+
+
+#############
+## FUNCTIONS
+#############
+# scan filesystem
 def today():
-    root_path = ROOT
+    root_path = ROOT_DIRECTORY
     p = Path(root_path).glob('**/*')
     file_list = [ x for x in p if x.is_file() ]
     filelist_dict = dict.fromkeys(file_list)
@@ -127,7 +139,7 @@ def find_moved(new_reduced, deleted_reduced):
 
 def write_report_heading(text_file):
     with open(text_file, 'w') as f:
-        a = '{}{}\n{}{}\n{}'.format('Date: ', date.today().strftime("%Y-%m-%d"), 'Root Path: ', ROOT.replace("/", "\\"), 'Hash Function: XXH3(128)')
+        a = '{}{}\n{}{}\n{}'.format('Date: ', date.today().strftime("%Y-%m-%d"), 'Root Path: ', ROOT_DIRECTORY.replace("/", "\\"), 'Hash Function: XXH3(128)')
         f.write(a)
 def write_to_file(text_file, heading, file_delta):
     fmt_filepath = lambda x, y: x.format(str(y).replace(str(y.anchor), ''))
@@ -172,8 +184,8 @@ def del_files(dir, num_days):
 fmt_date = lambda x: x.strftime("%Y-%m-%d")
 today_date = fmt_date(date.today())
 yesterday_date = fmt_date(date.today() - timedelta(days=1))
-filebase = 'D:/dill/hashes_'
-report = 'D:/dill/report_' + today_date + '.txt'
+filebase = REPORTS_DIRECTORY + '/hashes_'
+report = REPORTS_DIRECTORY + '/report_' + today_date + '.txt'
 
 #################
 ## run functions
@@ -188,4 +200,4 @@ write_to_file(report, '-- CORRUPT FILES --', corrupt)
 write_to_file(report, '-- NEW FILES --', new_excl_moved)
 write_to_file(report, '-- DELETED FILES --', deleted_excl_moved)
 write_to_file(report, '-- MOVED FILES --', moved_names_dict)
-del_files('D:/dill', 20)
+del_files(REPORTS_DIRECTORY, DAYS_TO_KEEP_REPORTS)
